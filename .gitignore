@@ -22,5 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/Backend/Cryptograph.js
+/Backend/Hash_Checker.js
 /Backend/Crypto_Tester.js
