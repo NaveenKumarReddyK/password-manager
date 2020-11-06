@@ -14,4 +14,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### ` This is a basic project to show different cryptographic algorithms `
+### ` Password manager to store your passwords for different websites `
+
+### ` Passwords are encrypted using 3DES algorithm ` 
