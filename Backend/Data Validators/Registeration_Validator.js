@@ -1,9 +1,10 @@
 // const validateFunc = require('validator')
-import validateFunc from "validator";
+const validateFunc = require('validator');
 
 module.exports = function isRegDataValid(reg_data) {
+  console.log(reg_data)
   //initialize errors
-  const reg_Errors = {};
+  let reg_Errors = {};
 
   //check if inputs are empty
   var userName = !validateFunc.isEmpty(reg_data.reg_uname)
@@ -31,13 +32,13 @@ module.exports = function isRegDataValid(reg_data) {
   //check for password length
   if (!validateFunc.isEmpty(userPwd)) {
     reg_Errors.pwdError = "Password Should Not Be Empty";
-  } else if (!validateFunc.isLenght(userPwd, 0, 8)) {
+  } else if (!validateFunc.isLenght(userPwd, {min : 0, max:8})) {
     reg_Errors.pwdError = "Password Length Should Be In Between 0 and 8";
   }
 
   //return all the errors
   return {
-    isValid: !validateFunc.isEmpty(reg_Errors),
+    isValid: validateFunc.isEmpty(reg_Errors),
     reg_Errors,
   };
 };

@@ -1,4 +1,4 @@
-import mongodb from 'mongoose';
+const mongodb = require('mongoose');
 const Schema = mongodb.Schema;
 
 //Schema for storing password

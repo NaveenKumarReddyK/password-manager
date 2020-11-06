@@ -1,21 +1,22 @@
 //login authentication Routes
 //registration Routes
 
-import express from 'express';
+const express = require('express');
 const authRoutes = express.Router();
-import User from '../Models/User_Model';
-import loginVD from '../Data Validators/Login_Validator';
-import regVD from '../Data Validators/Registeration_Validator';
-import CryptoJS from 'crypto-js';
-import bcryptJS from 'bcryptjs';
+const User = require('../Models/User_Model');
+const loginVD = require('../Data Validators/Login_Validator');
+const regVD = require('../Data Validators/Registeration_Validator');
+const CryptoJS = require('crypto-js');
+const bcryptJS = require('bcryptjs');
 
 
 // *********************************************************************************************************
 // ********************************** ROUTE TO REGISTER AN USER  **********************************************
 // *********************************************************************************************************
 authRoutes.route("/register").post(function (req, res) {
-    //check for error in validation
-    const { isValid, reg_Errors } = regVD(req.body);
+    //check for errors in validation
+    const regDataToBeValidated = req.body;
+    const { isValid, reg_Errors } = regVD(regDataToBeValidated);
     //check if reg is invalid
     if (!isValid) {
         return res.status(400).json({

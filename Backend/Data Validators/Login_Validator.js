@@ -1,9 +1,9 @@
 // const validateFunc = require('validator')
-import validateFunc from "validator";
+const validateFunc = require('validator');
 
 module.exports = function isLoginDataValid(login_data) {
   //initialize errors
-  const login_Errors = {};
+  let login_Errors = {};
 
   var userEmail = !validateFunc.isEmpty(login_data.login_email)
     ? login_data.login_email
@@ -22,13 +22,13 @@ module.exports = function isLoginDataValid(login_data) {
   //check for password length
   if (!validateFunc.isEmpty(userPwd)) {
     login_Errors.pwdError = "Password Should Not Be Empty";
-  } else if (!validateFunc.isLenght(userPwd, 0, 8)) {
+  } else if (!validateFunc.isLenght(userPwd, {min :0,max: 8})) {
     login_Errors.pwdError = "Password Length Should Be In Between 0 and 8";
   }
 
   //return all the errors
   return {
-    isValid: !validateFunc.isEmpty(login_Errors),
+    isValid: validateFunc.isEmpty(login_Errors),
     login_Errors,
   };
 };
