@@ -1,6 +1,5 @@
-import { Email } from '@material-ui/icons'
-import mongodb from 'mongoose'
-const Schema = mongodb.Schema
+import mongodb from 'mongoose';
+const Schema = mongodb.Schema;
 
 //define user schema
 
@@ -11,17 +10,24 @@ const userSchema = new Schema({
         required: true
     },
     email: {
-        type: Email,
+        type: String,
         default: "",
         required: true
     },
-    password: {
+    //this password is used for authentication 
+    password_bcrypt: {
+        type: String,
+        default: "",
+        required: true
+    },
+    //this master password is used as key for encryption and decryption of saved
+    password_sha256: {
         type: String,
         default: "",
         required: true
     }
 }, {
     collection: "USER_COLLECTION"
-})
+});
 
-module.exports = mongodb.model("UserModel", userSchema)
+module.exports = mongodb.model("User", userSchema);

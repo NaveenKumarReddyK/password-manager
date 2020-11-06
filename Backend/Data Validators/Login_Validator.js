@@ -5,11 +5,11 @@ module.exports = function isLoginDataValid(login_data) {
   //initialize errors
   const login_Errors = {};
 
-  var userEmail = !validateFunc.isEmpty(login_data.user_email)
-    ? login_data.user_email
+  var userEmail = !validateFunc.isEmpty(login_data.login_email)
+    ? login_data.login_email
     : "";
-  var userPwd = !validateFunc.isEmpty(login_data.user_pwd)
-    ? login_data.user_pwd
+  var userPwd = !validateFunc.isEmpty(login_data.login_pwd)
+    ? login_data.login_pwd
     : "";
 
   //check if email is of correct format

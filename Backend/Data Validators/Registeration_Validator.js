@@ -6,14 +6,14 @@ module.exports = function isRegDataValid(reg_data) {
   const reg_Errors = {};
 
   //check if inputs are empty
-  var userName = !validateFunc.isEmpty(reg_data.user_name)
-    ? reg_data.user_name
+  var userName = !validateFunc.isEmpty(reg_data.reg_uname)
+    ? reg_data.reg_uname
     : "";
-  var userEmail = !validateFunc.isEmpty(reg_data.user_email)
-    ? reg_data.user_email
+  var userEmail = !validateFunc.isEmpty(reg_data.reg_email)
+    ? reg_data.reg_email
     : "";
-  var userPwd = !validateFunc.isEmpty(reg_data.user_pwd)
-    ? reg_data.user_pwd
+  var userPwd = !validateFunc.isEmpty(reg_data.reg_pwd)
+    ? reg_data.reg_pwd
     : "";
 
   //check if username is empty
