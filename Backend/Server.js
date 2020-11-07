@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 //routes for navigation
 const authRoutes = require('./Routes/Authentication_Routes');
+const pwdRoutes = require('./Routes/Pwd_Routes');
 //cross origin request
 const cors = require('cors');
 //express session to store cookies in mongodb store
@@ -57,7 +58,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //routes
 app.use("/pw-manager/auth", authRoutes);//login & registration
-
+app.use("/pw-manager/pwd", pwdRoutes);//passwords actions
 app.listen(port, (err) => {
   if (err) {
     console.log("Failed to start server");

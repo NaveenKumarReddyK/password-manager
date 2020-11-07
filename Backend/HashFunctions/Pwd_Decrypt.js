@@ -5,7 +5,8 @@ const crypto = require('crypto-js');
 module.exports = function decryptStoredPassword(enc_pwd, master_pwd) {
   //SHA256 algo encrypt to master password to use it as key
 
-  var shaEnc = crypto.SHA256(master_pwd);
+  // password already encrypted using SHA256  
+  var shaEnc = master_pwd;
   // console.log("SHA 256", shaEnc.toString(crypto.enc.Base64));
   var key = shaEnc.toString(crypto.enc.Base64);
   var keyHex = crypto.enc.Utf8.parse(key);

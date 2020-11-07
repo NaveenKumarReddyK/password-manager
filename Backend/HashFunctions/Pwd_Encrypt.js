@@ -5,9 +5,10 @@ const crypto = require("crypto-js");
 module.exports = function encryptStoredPassword(curr_pwd, master_pwd) {
   //key is the SHA256 hashed master password of user
   //key is the sha512 hash of user password
-  //SHA256 encryption of user password
+  //SHA256 encryption of master password
 
-  var shaEnc = crypto.SHA256(master_pwd);
+  // password already encrypted using SHA256  
+  var shaEnc = master_pwd;
   // console.log("SHA 256", shaEnc.toString(crypto.enc.Base64));
   var key = shaEnc.toString(crypto.enc.Base64);
   var keyHex = crypto.enc.Utf8.parse(key);

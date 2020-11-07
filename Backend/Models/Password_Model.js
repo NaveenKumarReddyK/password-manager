@@ -3,7 +3,14 @@ const Schema = mongodb.Schema;
 
 //Schema for storing password
 const pwdSchema = new Schema({
-    email: {
+    //email used while registering
+    master_email: {
+        type: String,
+        default: "",
+        required: true,
+    },
+    //email used for saving
+    company_email: {
         type: String,
         default: "",
         required: true,
@@ -15,7 +22,7 @@ const pwdSchema = new Schema({
         required: true,
     },
     //this master password is used for encryption and decryption of saved
-    password_sha256: {
+    master_password: {
         type: String,
         default: "",
         required: true
@@ -27,4 +34,4 @@ const pwdSchema = new Schema({
 );
 
 //export shema
-module.exports = mongodb.model("PwdModel", pwdSchema);
+module.exports = mongodb.model("Pwd", pwdSchema);
