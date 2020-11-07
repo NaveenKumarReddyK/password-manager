@@ -59,6 +59,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //routes
 app.use("/pw-manager/auth", authRoutes);//login & registration
 app.use("/pw-manager/pwd", pwdRoutes);//passwords actions
+
 app.listen(port, (err) => {
   if (err) {
     console.log("Failed to start server");
