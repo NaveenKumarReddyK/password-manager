@@ -23,3 +23,4 @@ yarn-error.log*
 #Hash functions tester
 /Backend/Hash_Checker.js
 /Backend/Crypto_Tester.js
+/src/Components/CSS-Maker.css
