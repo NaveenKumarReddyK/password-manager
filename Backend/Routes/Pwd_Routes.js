@@ -17,59 +17,61 @@ const pwdEnc = require('../HashFunctions/Pwd_Encrypt');
 pwdRoutes.route("/addpwd").post(function (req, res) {
     //get SHA256 hash of master_pwd
     //comp_email,comp_pwd ==> attributes
-    var masterPwd_SHA256;
+    // var masterPwd_SHA256;
     User.findOne({ email: req.session.session_email }).then((userRes) => {
-        masterPwd_SHA256 = userRes.password_sha256;
+
+        var masterPwd_SHA256 = userRes.password_sha256;
+
+        //encrypt password using Triple DES
+        var curr_pwd = req.body.comp_pwd;
+        var curr_email = req.body.comp_email;
+        var hashed_pwd = pwdEnc(curr_pwd, masterPwd_SHA256);
+        console.log(hashed_pwd);
+
+        //check if company email already present
+
+
+        Pwd.findOne({ master_email: req.session.session_email, company_email: curr_email }).then((pwdRes) => {
+            if (!pwdRes) {
+                //if pwd not present then proceed
+
+                //create new pwd data
+                const newPwdData = new Pwd({
+                    master_email: req.session.session_email,
+                    company_email: curr_email,
+                    password_tosave: hashed_pwd.enc_pwd_String,
+                    master_password: masterPwd_SHA256
+                });
+                //add it into DB
+                newPwdData.save().then((pwdSaved) => {
+                    console.log("Password Saved Successfuly");
+                    res.status(200).json({
+                        Message: "Password Added Succesfuly",
+                        Pwd_Data: pwdSaved
+                    });
+                }).catch((err) => {
+                    res.status(500).json({
+                        Pwd_Error: "Unable to save password"
+                    });
+                });
+
+            } else {
+                res.status(200).json({
+                    Pwd_Msg: "Password already present"
+                });
+            }
+        }).catch((err) => {
+            res.status(400).json(err);
+        });
+
+
+
     }).catch((err) => {
-        res.status(5000).json({
+        res.status(500).json({
             Email_Error: "Unable to find email"
         });
     });
-    //encrypt password using Triple DES
-    var curr_pwd = req.body.comp_pwd;
-    var curr_email = req.body.comp_email;
-    var hashed_pwd = pwdEnc(curr_pwd, masterPwd_SHA256);
-    console.log(hashed_pwd);
 
-    //check if company email already present
-
-    var pwd_laready_present = false;
-    Pwd.findOne({ master_email: req.session.session_email, company_email: curr_email }).then((pwdRes) => {
-        if (pwdRes) {
-            pwd_laready_present = true;
-        }
-    }).catch((err) => {
-        res.status(400).json(err);
-    });
-
-    //if pwd not present then proceed
-    if (!pwd_laready_present) {
-        //create new pwd data
-        const newPwdData = new Pwd({
-            master_email: req.session.session_email,
-            company_email: curr_email,
-            password_tosave: hashed_pwd,
-            master_password: masterPwd_SHA256
-        });
-        //add it into DB
-        newPwdData.save().then((pwdSaved) => {
-            console.log("Password Saved Successfuly");
-            res.status(200).json({
-                Message: "Password Added Succesfuly",
-                Pwd_Data: pwdSaved
-            });
-        }).catch((err) => {
-            res.status(500).json({
-                Pwd_Error: "Unable to save password"
-            });
-        });
-
-    }
-    else {
-        res.status(200).json({
-            Pwd_Msg: "Password already present"
-        });
-    }
 });
 
 // *********************************************************************************************************
@@ -132,7 +134,7 @@ pwdRoutes.route('/update').post(function (req, res) {
     var new_pwd = req.body.new_pwd;
     var masterPwd_SHA256 = req.body.masterPwd_SHA256;
     var new_enc_pwd = pwdEnc(new_pwd, masterPwd_SHA256);
-    Pwd.findOneAndUpdate({ master_email: master_email, company_email: comp_email }, { $set: { password_tosave: new_enc_pwd } }).then((updRes) => {
+    Pwd.findOneAndUpdate({ master_email: master_email, company_email: comp_email }, { $set: { password_tosave: new_enc_pwd.enc_pwd_String } }).then((updRes) => {
         if (!updRes) {
             res.status(400).json({
                 Upd_Err: "Unable to update password"
@@ -149,3 +151,4 @@ pwdRoutes.route('/update').post(function (req, res) {
     });
 });
 module.exports = pwdRoutes;
+
