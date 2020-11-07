@@ -41,37 +41,46 @@ authRoutes.route("/register").post(function (req, res) {
                 //SHA256 hashed pwd 
                 //reg_pwd is registered passwrod
                 const sha256_pwd = CryptoJS.SHA256(req.body.reg_pwd);
-                bcryptJS.hash(req.body.reg_pwd, salt, function (err, hashed_bcrypt_pwd) {
-                    //error while hashing pwd
+                bcryptJS.genSalt(10, function (err, salt) {
                     if (err) {
-                        res.status(400).json({
-                            Reg_Hash_Error: "Unable to Hash Reg Password",
-                            bcryptJS_Error: err
+                        return res.status(400).json({
+                            Salt_Error: "Error while genrating salt"
                         });
                     }
-                    //no error
                     else {
-                        //new user data
-                        const newUserData = new User({
-                            uname: req.body.reg_uname,
-                            email: req.body.reg_email,
-                            password_bcrypt: hashed_bcrypt_pwd,
-                            password_sha256: sha256_pwd
-                        });
-
-                        //save into database
-                        newUserData.save().then((saveRes) => {
-                            console.log("Registered Sucessfuly");
-                            res.status(200).json({
-                                Messgae: "Registered Sucessfuly",
-                                User_Data: saveRes
-                            }).catch((err) => {
-                                console.log("Error whilesaving reg user to database");
+                        bcryptJS.hash(req.body.reg_pwd, salt, function (err, hashed_bcrypt_pwd) {
+                            //error while hashing pwd
+                            if (err) {
                                 res.status(400).json({
-                                    save_Error: "Error whilesaving reg user to database",
-                                    reg_save_Error: err
+                                    Reg_Hash_Error: "Unable to Hash Reg Password",
+                                    bcryptJS_Error: err
                                 });
-                            });
+                            }
+                            //no error
+                            else {
+                                //new user data
+                                const newUserData = new User({
+                                    uname: req.body.reg_uname,
+                                    email: req.body.reg_email,
+                                    password_bcrypt: hashed_bcrypt_pwd,
+                                    password_sha256: sha256_pwd
+                                });
+
+                                //save into database
+                                newUserData.save().then((saveRes) => {
+                                    console.log("Registered Sucessfuly");
+                                    res.status(200).json({
+                                        Messgae: "Registered Sucessfuly",
+                                        User_Data: saveRes
+                                    });
+                                }).catch((err) => {
+                                    console.log("Error whilesaving reg user to database");
+                                    res.status(500).json({
+                                        save_Error: "Error whilesaving reg user to database",
+                                        reg_save_Error: err
+                                    });
+                                });
+                            }
                         });
                     }
                 });
@@ -100,7 +109,7 @@ authRoutes.route('/login').get(function (req, res) {
         const login_email = req.body.login_email;
         const login_pwd = req.body.login_pwd;
         //find the user
-        User.findOne({ email: req.body.login_email }).then((login_Res) => {
+        User.findOne({ email: login_email }).then((login_Res) => {
             if (!login_Res) {
                 return res.status(400).json({
                     Login_Error: "User not found"
@@ -125,7 +134,7 @@ authRoutes.route('/login').get(function (req, res) {
                 });
             }
         }).catch((err) => {
-            res.status(400).json({
+            res.status(500).json({
                 Find_Error: "Error While Finding User",
             });
         });
@@ -157,7 +166,7 @@ authRoutes.route('/getinfo').get(function (req, res) {
         res.status(200).json({
             UserInfo: info
         }).catch((err) => {
-            res.status(400).json(err);
+            res.status(500).json(err);
         });
     });
 });
