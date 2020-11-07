@@ -165,9 +165,9 @@ authRoutes.route('/getinfo').get(function (req, res) {
     User.findOne({ email: user_email }).then((info) => {
         res.status(200).json({
             UserInfo: info
-        }).catch((err) => {
-            res.status(500).json(err);
-        });
+        })
+    }).catch((err) => {
+        res.status(500).json(err);
     });
 });
 //export module
