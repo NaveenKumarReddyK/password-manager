@@ -24,3 +24,4 @@ yarn-error.log*
 /Backend/Hash_Checker.js
 /Backend/Crypto_Tester.js
 /src/Components/CSS-Maker.css
+/src/Components/Main-Page.js
