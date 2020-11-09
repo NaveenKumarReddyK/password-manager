@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Container, Paper, Typography, Divider, TextField, Button, Link } from '@material-ui/core';
+import { Grid, Container, Typography, Divider, TextField, Button, Link } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import propTypes from 'prop-types';
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
-    Paper, Divider, TextField, Button, Link, Dialog, DialogActions,
-    DialogContent, DialogTitle
+    Paper, Divider, TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle
 } from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import propTypes from 'prop-types';
@@ -10,7 +9,9 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-
+import axios from 'axios';
+import Login from './Login';
+import {BrowserRouter, Redirect} from 'react-router-dom';
 
 const DB_Styles = {
     navDiv: {
@@ -88,7 +89,8 @@ class Dashboard extends React.Component {
         super(props);
         this.state = {
             addPwd_Sanck: false,
-            updatePwd_Sanck: false
+            updatePwd_Sanck: false,
+            loginStatus: false
         };
         this.addPwdSanckOpen = this.addPwdSanckOpen.bind(this);
         this.addPwdSanckClose = this.addPwdSanckClose.bind(this);
@@ -102,8 +104,28 @@ class Dashboard extends React.Component {
     updatePwdSnackClose() {this.setState({updatePwd_Sanck: false});}
 
 
+    componentDidMount() {
+        var logInCofig = {
+            method: 'get',
+            url: 'http://localhost:4000/pw-manager/auth/isloggedin',
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        };
+        axios(logInCofig).then((loginRes) => {
+            this.setState({
+                loginStatus: loginRes.data.loginStatus
+            });
+        }).catch((err) => {console.log("error");});
+    }
+
     render() {
         const {classes} = this.props;
+        const userLoggedIn =  this.state
+        if (!this.state.loginStatus) {
+            return (<Login />);
+        }
         return (
             <div>
                 <div className={classes.navDiv}>
@@ -154,13 +176,45 @@ class Dashboard extends React.Component {
                             </li>
                         </ul>
                     </Paper>
-                </div>
-                {/******************************************************************************
-                  *********************ADDING UPDATE PASSWORD CLASS*****************************
-                  ******************************************************************************/}
+                    {/******************************************************************************
+                      *********************ADDING UPDATE PASSWORD DIALOG****************************
+                      ******************************************************************************/}
+                    <Dialog open={this.state.updatePwd_Sanck}    >
+                        <DialogTitle >Update Password</DialogTitle>
+                        <Divider />
+                        <DialogContent>
+                            <TextField
+                                disabled
+                                label="Company Email Address"
+                                type="email"
+                                name="email"
+                                fullWidth
+                                className={classes.email_input}
+                                value="naveen@gmail.com"
+                            />
+                            <TextField
+                                label="Updated Password"
+                                type="text"
+                                name="password"
+                                fullWidth
+                                className={classes.pwd_input}
 
-                <Dialog open={this.state.updatePwd_Sanck}    >
-                    <DialogTitle >Update Password</DialogTitle>
+                            />
+                        </DialogContent>
+                        <Divider />
+                        <DialogActions>
+                            <Button style={{color: "green"}} size="large">Update</Button>
+                            <Button style={{color: "red"}} size="large" onClick={this.updatePwdSnackClose}>Cancel</Button>
+                        </DialogActions>
+                    </Dialog>
+                    {/* ************************************************************************************ */}
+                </div>
+
+                {/******************************************************************************
+                  *********************ADDING ADD PASSWORD DIALOG*******************************
+                  ******************************************************************************/}
+                <Dialog open={this.state.addPwd_Sanck}  >
+                    <DialogTitle >Add Password</DialogTitle>
                     <Divider />
                     <DialogContent>
                         <TextField
@@ -181,40 +235,11 @@ class Dashboard extends React.Component {
                     </DialogContent>
                     <Divider />
                     <DialogActions>
-                        <Button style={{color: "green"}} size="large">Update</Button>
-                        <Button style={{color: "red"}} size="large" onClick={this.updatePwdSnackClose}>Cancel</Button>
-                    </DialogActions>
-                </Dialog>
-                {/******************************************************************************
-                  *********************ADDING ADD PASSWORD CLASS********************************
-                  ******************************************************************************/}
-                <Dialog open={this.state.addPwd_Sanck}  >
-                    <DialogTitle >Add Password</DialogTitle>
-                    <Divider />
-                    <DialogContent>
-                        <TextField
-                            // autoFocus
-                            label="Company Email Address"
-                            type="email"
-                            name="email"
-                            fullWidth
-                            className={classes.email_input}
-                        />
-                        <TextField
-                            label="Updated Password"
-                            type="text"
-                            name="password"
-                            fullWidth
-                            className={classes.pwd_input}
-                        />
-                    </DialogContent>
-                    <Divider />
-                    <DialogActions>
                         <Button style={{color: "green"}} size="large">Add ++</Button>
                         <Button style={{color: "red"}} size="large" onClick={this.addPwdSanckClose}>Cancel</Button>
                     </DialogActions>
                 </Dialog>
-
+                {/* ************************************************************************************ */}
             </div>
         );
     }

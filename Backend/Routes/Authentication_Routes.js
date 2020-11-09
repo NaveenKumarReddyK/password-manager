@@ -8,6 +8,7 @@ const loginVD = require('../Data Validators/Login_Validator');
 const regVD = require('../Data Validators/Registeration_Validator');
 const CryptoJS = require('crypto-js');
 const bcryptJS = require('bcryptjs');
+const isEmpty = require('is-empty');
 
 
 // *********************************************************************************************************
@@ -16,7 +17,7 @@ const bcryptJS = require('bcryptjs');
 authRoutes.route("/register").post(function (req, res) {
     //check for errors in validation
     const regDataToBeValidated = req.body;
-    const { isValid, reg_Errors } = regVD(regDataToBeValidated);
+    const {isValid, reg_Errors} = regVD(regDataToBeValidated);
     //check if reg is invalid
     if (!isValid) {
         return res.status(400).json({
@@ -29,7 +30,7 @@ authRoutes.route("/register").post(function (req, res) {
     else {
         //check for user existence in database
         //use promises
-        User.findOne({ email: req.body.reg_email }).then(reg_Res => {
+        User.findOne({email: req.body.reg_email}).then(reg_Res => {
             //if resoponse id there then user already exists
             if (reg_Res) {
                 return res.status(400).json({
@@ -93,9 +94,9 @@ authRoutes.route("/register").post(function (req, res) {
 // ********************************** ROUTE TO LOGIN AN USER  **********************************************
 // *********************************************************************************************************
 
-authRoutes.route('/login').get(function (req, res) {
+authRoutes.route('/login').post(function (req, res) {
     //validate login credentials
-    const { isValid, login_Errors } = loginVD(req.body);
+    const {isValid, login_Errors} = loginVD(req.body);
     //check for error
     if (!isValid) {
         res.status(400).json({
@@ -109,7 +110,7 @@ authRoutes.route('/login').get(function (req, res) {
         const login_email = req.body.login_email;
         const login_pwd = req.body.login_pwd;
         //find the user
-        User.findOne({ email: login_email }).then((login_Res) => {
+        User.findOne({email: login_email}).then((login_Res) => {
             if (!login_Res) {
                 return res.status(400).json({
                     Login_Error: "User not found"
@@ -148,10 +149,10 @@ authRoutes.route('/login').get(function (req, res) {
 authRoutes.route('/logout').post(function (req, res) {
     req.session.destroy((err) => {
         if (err) {
-            return res.status(200).json({ LogoutMsg: "User already logged out" });
+            return res.status(200).json({LogoutMsg: "User already logged out"});
         }
         else {
-            return res.status(200).json({ LogoutMsg: "Successfuly logged out" });
+            return res.status(200).json({LogoutMsg: "Successfuly logged out"});
         }
     });
 });
@@ -162,13 +163,21 @@ authRoutes.route('/logout').post(function (req, res) {
 
 authRoutes.route('/getinfo').get(function (req, res) {
     const user_email = req.session.session_email;
-    User.findOne({ email: user_email }).then((info) => {
+    User.findOne({email: user_email}).then((info) => {
         res.status(200).json({
             UserInfo: info
         });
     }).catch((err) => {
         res.status(500).json(err);
     });
+});
+
+// *********************************************************************************************************
+// ********************************** LOGGED IN STATUS  ****************************************************
+// *********************************************************************************************************
+authRoutes.route('/isloggedin').get(function (req, res) {
+    const loggedin_email = req.session.session_email;
+    return isEmpty(loggedin_email) ? res.status(200).json({loginStatus: false}) : res.status(200).json({loginStatus: true});
 });
 //export module
 module.exports = authRoutes;

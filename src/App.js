@@ -1,5 +1,5 @@
 import { BrowserRouter, Route } from 'react-router-dom';
-import MainPage from './Components/Main-Page';
+// import MainPage from './Components/Main-Page';
 import Login_Component from './Components/Login';
 import Register_Component from './Components/Register';
 import Dashboard from "./Components/Dashboard";

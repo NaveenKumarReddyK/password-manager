@@ -22,7 +22,7 @@ const mongoDB_url = "mongodb://localhost:27017/pwdManager";
 
 //connecting to database
 mongodb.Promise = global.Promise;
-mongodb.connect(mongoDB_url, { useNewUrlParser: true, useUnifiedTopology: true })
+mongodb.connect(mongoDB_url, {useNewUrlParser: true, useUnifiedTopology: true})
   .then(res => {
     console.log("Successfuly connected to databse");
   })
@@ -52,9 +52,9 @@ app.use(
 );
 
 //enabling cross origin requestion 
-app.use(cors({ credentials: true, origin: "http://localhost:4000" }));
+app.use(cors({credentials: true, origin: "http://localhost:3000"}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 //routes
 app.use("/pw-manager/auth", authRoutes);//login & registration
