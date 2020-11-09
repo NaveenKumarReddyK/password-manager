@@ -103,7 +103,7 @@ pwdRoutes.route('/getpwds').get(function (req, res) {
 // ********************************** ROUTE TO DELETE PASSWORD  ********************************************    
 // *********************************************************************************************************
 
-pwdRoutes.route('/delete').delete(function (req, res) {
+pwdRoutes.route('/delete').post(function (req, res) {
     var master_email = req.session.session_email;
     var comp_email = req.body.comp_email;
     //delete pwd from database

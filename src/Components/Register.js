@@ -1,7 +1,9 @@
 import React from 'react';
-import { Grid, Container, Typography, Divider, TextField, Button, Link } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import {Grid, Container, Typography, Divider, TextField, Button, Link} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
 import propTypes from 'prop-types';
+import {BrowserRouter, Redirect} from 'react-router-dom';
+import axios from 'axios';
 
 const Reg_Style = {
     root: {
@@ -46,7 +48,7 @@ class Register_Component extends React.Component {
         this.state = {
             uname: "",
             email: "",
-            password: ""
+            password: "",
         };
         this.handleUname = this.handleUname.bind(this);
         this.handlePwd = this.handlePwd.bind(this);
@@ -70,19 +72,39 @@ class Register_Component extends React.Component {
     }
     submitForm(event) {
         event.preventDefault();
-        const user = {
-            'uname': this.state.uname,
-            'email': this.state.email,
-            'password': this.state.password
+        var data = JSON.stringify({
+            reg_uname: this.state.uname,
+            reg_email: this.state.email,
+            reg_pwd: this.state.password
+        });
+
+        var submitConfig = {
+            method: 'post',
+            url: 'http://localhost:4000/pw-manager/auth/register',
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
-        console.log(user);
+        axios(submitConfig).then((res) => {
+            this.props.handleLogin();
+        }).catch((err) => {
+            console.log("Error", err);
+        });
     }
+    //if user not logged in redirect to login page
+
+
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
+        if (this.props.loggedInStatus === true) {
+            return <Redirect to="/pwd/user" />;
+        }
         return (
             <div>
                 <Container maxWidth="xl" className={classes.root}>
-                    <Grid container maxWidth="xl" direction="row" spacing={4} style={{ paddingTop: "20vh", paddingBottom: "12.8vh" }}>
+                    <Grid container maxWidth="xl" direction="row" spacing={4} style={{paddingTop: "20vh", paddingBottom: "12.8vh"}}>
                         <Grid item xs={1} >{""}</Grid>
                         <Grid item xs={5}  >
                             <Typography className={classes.typo_1}>Password Manager</Typography><Divider />
@@ -90,7 +112,7 @@ class Register_Component extends React.Component {
                             all you need to remember is one password to access all your passwords</Typography>
                         </Grid>
                         <Grid item xs={1} >{""}</Grid>
-                        <Grid item xs={4} style={{ backgroundColor: "#fafbfc", borderRadius: "10px" }} >
+                        <Grid item xs={4} style={{backgroundColor: "#fafbfc", borderRadius: "10px"}} >
 
                             <form onSubmit={this.submitForm}>
                                 <Grid item xl container direction="column" spacing={3} >
@@ -117,22 +139,22 @@ class Register_Component extends React.Component {
                                     </Grid>
                                     <Grid item >
                                         <TextField label="Password"
-                                            type="password"
-                                            name="email"
+                                            type="text"
+                                            name="password"
                                             onChange={this.handlePwd}
                                             value={this.state.password}
                                             className={classes.inputs}
                                         />
                                     </Grid>
-                                    <Grid item style={{ marginTop: "-3%" }}>
-                                        <Typography variant="caption" style={{ marginLeft: "5%", color: "#f66a0a" }}>
+                                    <Grid item style={{marginTop: "-3%"}}>
+                                        <Typography variant="caption" style={{marginLeft: "5%", color: "#f66a0a"}}>
                                             Password length should be between 5 and 8 characters
                                     </Typography>
 
                                     </Grid>
-                                    <Grid item style={{ marginTop: "-2%" }}>
-                                        <Button variant="contained" size="large" style={{ backgroundColor: "#ea4a5a", marginLeft: "5%" }} type="submit"> Register</Button>
-                                        <Typography variant="button" style={{ marginLeft: "6%", lineHeight: "2" }}>Already have account <Link href="/pwd/login">login</Link></Typography>
+                                    <Grid item style={{marginTop: "-2%"}}>
+                                        <Button variant="contained" size="large" style={{backgroundColor: "#ea4a5a", marginLeft: "5%"}} type="submit"> Register</Button>
+                                        <Typography variant="button" style={{marginLeft: "6%", lineHeight: "2"}}>Already have account <Link href="/pwd/login">login</Link></Typography>
                                     </Grid>
                                 </Grid>
                             </form>

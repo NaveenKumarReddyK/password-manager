@@ -3,6 +3,8 @@ import {Grid, Container, Typography, Divider, TextField, Button, Link, Snackbar}
 import {withStyles} from '@material-ui/core/styles';
 import propTypes from 'prop-types';
 import axios from 'axios';
+import {useHistory, Redirect} from 'react-router-dom';
+import {isUserLoggedIn} from './Logged-Status/Is_User_LoggedIn';
 
 const Login_Style = {
     root: {
@@ -64,17 +66,17 @@ class Login_Component extends React.Component {
             email: event.target.value
         });
     }
+    //if user not logged in redirect to login page
     submitForm(event) {
         event.preventDefault();
         this.setState({
             snack_open: true
         });
-
         var data = JSON.stringify({
             login_email: this.state.email,
             login_pwd: this.state.password
         });
-        console.log(data)
+        console.log(data);
         var loginData = {
             method: 'post',
             url: "http://localhost:4000/pw-manager/auth/login",
@@ -85,8 +87,10 @@ class Login_Component extends React.Component {
             data: data
         };
         axios(loginData).then((loginRes) => {
-            console.log(JSON.stringify(loginRes.data));
+            //invoke login
+            this.props.handleLogin()
         }).catch((err) => {console.log(JSON.stringify(err));});
+
     }
 
     snackClose() {
@@ -96,6 +100,10 @@ class Login_Component extends React.Component {
     }
     render() {
         const {classes} = this.props;
+        // console.log(this.props.loginStatus);
+        if (this.props.loggedInStatus === true) {
+            return <Redirect to="/pwd/user" />;
+        }
         return (
             <div>
                 <Snackbar

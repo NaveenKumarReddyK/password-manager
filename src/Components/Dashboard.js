@@ -11,7 +11,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import axios from 'axios';
 import Login from './Login';
-import {BrowserRouter, Redirect} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 
 const DB_Styles = {
     navDiv: {
@@ -90,41 +90,151 @@ class Dashboard extends React.Component {
         this.state = {
             addPwd_Sanck: false,
             updatePwd_Sanck: false,
-            loginStatus: false
+            loginStatus: false,
+            addPwd: "",
+            addEmail: "",
+            updPwd: "",
+            userData: [],
         };
         this.addPwdSanckOpen = this.addPwdSanckOpen.bind(this);
         this.addPwdSanckClose = this.addPwdSanckClose.bind(this);
         this.updatePwdSnackOpen = this.updatePwdSnackOpen.bind(this);
         this.updatePwdSnackClose = this.updatePwdSnackClose.bind(this);
-
+        this.userLogout = this.userLogout.bind(this);
+        this.getUserData = this.getUserData.bind(this);
+        this.addPassword = this.addPassword.bind(this);
+        this.updatePassword = this.updatePassword.bind(this);
+        this.handleAddPwd = this.handleAddPwd.bind(this);
+        this.handleUpdPwd = this.handleUpdPwd.bind(this);
     }
     addPwdSanckOpen() {this.setState({addPwd_Sanck: true});}
     addPwdSanckClose() {this.setState({addPwd_Sanck: false});}
     updatePwdSnackOpen() {this.setState({updatePwd_Sanck: true});}
     updatePwdSnackClose() {this.setState({updatePwd_Sanck: false});}
 
-
+    //invoke getUserData function to get all passwords of user
     componentDidMount() {
-        var logInCofig = {
+        this.getUserData();
+    }
+    //get all passwords information
+    getUserData() {
+        var userPwdsConfig = {
             method: 'get',
-            url: 'http://localhost:4000/pw-manager/auth/isloggedin',
+            url: "http://localhost:4000/pw-manager/pwd/getpwds",
             withCredentials: true,
             headers: {
-                "Content-Type": "application/json; charset=utf-8",
+                'Content-Type': 'application/json'
             },
         };
-        axios(logInCofig).then((loginRes) => {
+        axios(userPwdsConfig).then((res) => {
             this.setState({
-                loginStatus: loginRes.data.loginStatus
+                userData: res.data
             });
-        }).catch((err) => {console.log("error");});
+            console.log(this.state.userData.Pwds);
+        }).catch((err) => {
+            console.log("Error", err);
+        });
     }
+    //add password dialog inputs
+    handleAddPwd(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    }
+    //add password
+    addPassword() {
+        var data = JSON.stringify({
+            comp_email: this.state.addEmail,
+            comp_pwd: this.state.addPwd,
+        });
 
+        var addPwdConfig = {
+            method: 'post',
+            url: "http://localhost:4000/pw-manager/pwd/addpwd",
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+        axios(addPwdConfig).then((res) => {
+            this.getUserData();
+            this.addPwdSanckClose();
+        }).catch((err) => {
+            console.log("Error", err);
+        });
+    }
+    //update password dialog input
+    handleUpdPwd(event) {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    }
+    //update password
+    updatePassword(updatedPassword, companyEmail, masterPwdHash) {
+        var data = JSON.stringify({
+            comp_email: companyEmail,
+            new_pwd: updatedPassword,
+            masterPwd_SHA256: masterPwdHash
+        });
+        var updPwdsConfig = {
+            method: 'post',
+            url: "http://localhost:4000/pw-manager/pwd/update",
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+        axios(updPwdsConfig).then((res) => {
+            //call get user data to update displayed passwords
+            this.getUserData();
+            this.updatePwdSnackClose();
+        }).catch((err) => {
+            console.log("Error", err);
+        });
+    }
+    //delete password
+    deletePassword(companyEmail) {
+        var data = JSON.stringify({
+            comp_email: companyEmail
+        });
+        var delPwdConfig = {
+            method: 'post',
+            url: "http://localhost:4000/pw-manager/pwd/delete",
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        };
+        axios(delPwdConfig).then((res) => {
+            this.getUserData();
+        }).catch((err) => {
+            console.log("Error", err);
+        });
+    }
+    //logout from website
+    userLogout() {
+        var logoutConfig = {
+            method: 'post',
+            url: "http://localhost:4000/pw-manager/auth/logout",
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+        axios(logoutConfig).then((res) => {
+            this.props.handleLogout();
+        }).catch((err) => {
+            console.log("ERROR", err);
+        });
+    }
+    //if user not logged in redirect to login page
     render() {
         const {classes} = this.props;
-        const userLoggedIn =  this.state
-        if (!this.state.loginStatus) {
-            return (<Login />);
+        if (this.props.loggedInStatus === false) {
+            return <Redirect to="/pwd/login" />;
         }
         return (
             <div>
@@ -144,7 +254,7 @@ class Dashboard extends React.Component {
                                 <Button variant="contained" size="large" style={{backgroundColor: "#f9c513"}}>References</Button>
                             </li>
                             <li className={classes.nav_ul_li}>
-                                <Button variant="contained" size="large" endIcon={<ExitToAppIcon />} style={{backgroundColor: "#f97583"}}>Logout</Button>
+                                <Button variant="contained" size="large" endIcon={<ExitToAppIcon />} style={{backgroundColor: "#f97583"}} onClick={this.userLogout}>Logout</Button>
                             </li>
                         </ul>
                     </Paper>
@@ -169,7 +279,7 @@ class Dashboard extends React.Component {
                                 <p className={classes.data_p}>Password</p>
                             </li>
                             <li className={classes.data_ul_li_34}>
-                                <Button variant="contained" disableElevation size="large" endIcon={<CloudUploadIcon />} style={{backgroundColor: "#f66a0a"}} onClick={this.updatePwdSnackOpen}>Update</Button>
+                                <Button variant="contained" disableElevation size="large" endIcon={<CloudUploadIcon />} style={{backgroundColor: "#f66a0a"}} >Update</Button>
                             </li>
                             <li className={classes.data_ul_li_34}>
                                 <Button variant="contained" disableElevation size="large" endIcon={<DeleteForeverIcon />} style={{backgroundColor: "#cb2431"}}>Delete</Button>
@@ -203,7 +313,7 @@ class Dashboard extends React.Component {
                         </DialogContent>
                         <Divider />
                         <DialogActions>
-                            <Button style={{color: "green"}} size="large">Update</Button>
+                            <Button style={{color: "green"}} size="large" >Update</Button>
                             <Button style={{color: "red"}} size="large" onClick={this.updatePwdSnackClose}>Cancel</Button>
                         </DialogActions>
                     </Dialog>
@@ -221,22 +331,24 @@ class Dashboard extends React.Component {
                             // autoFocus
                             label="Company Email Address"
                             type="email"
-                            name="email"
+                            name="addEmail"
                             fullWidth
+                            onChange={this.handleAddPwd}
                             className={classes.email_input}
                         />
                         <TextField
                             label="Password"
                             type="text"
-                            name="password"
+                            name="addPwd"
                             fullWidth
+                            onChange={this.handleAddPwd}
                             className={classes.pwd_input}
                         />
                     </DialogContent>
                     <Divider />
                     <DialogActions>
-                        <Button style={{color: "green"}} size="large">Add ++</Button>
-                        <Button style={{color: "red"}} size="large" onClick={this.addPwdSanckClose}>Cancel</Button>
+                        <Button style={{color: "green"}} size="large" onClick={this.addPassword}>Add ++</Button>
+                        <Button style={{color: "red"}} size="large" >Cancel</Button>
                     </DialogActions>
                 </Dialog>
                 {/* ************************************************************************************ */}
