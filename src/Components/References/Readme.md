@@ -1,18 +1,18 @@
-## References used for building this site
+# References used for building this site
 
-### MERN stack 
+## MERN stack 
 
-> #### [ReactJs](https://reactjs.org/docs/getting-started.html) `
+> ### [React Js](https://reactjs.org/docs/getting-started.html) `
 
-> #### [NodeJs](https://nodejs.dev/learn) 
+> ### [Node Js](https://nodejs.dev/learn) 
 
-> #### [ExpressJs](https://expressjs.com/en/4x/api.html) 
+> ### [Express Js](https://expressjs.com/en/4x/api.html) 
 
-> #### [MongoDB](https://docs.mongodb.com/manual/crud/) 
+> ### [MongoDB](https://docs.mongodb.com/manual/crud/) 
 
-> #### [CryptoJS](https://cryptojs.gitbook.io/docs/)  
+> ### [Crypto JS](https://cryptojs.gitbook.io/docs/)  
 
-> #### [MaterilUI](https://material-ui.com/) 
+> ### [MaterialUI](https://material-ui.com/) 
 
 
 

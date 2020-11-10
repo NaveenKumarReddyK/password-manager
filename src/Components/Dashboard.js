@@ -269,7 +269,7 @@ class Dashboard extends React.Component {
                                 <Button variant="contained" size="large" endIcon={<PostAddIcon />} style={{backgroundColor: "#85e89d"}} onClick={this.addPwdSanckOpen} >Add</Button>
                             </li>
                             <li className={classes.nav_ul_li}>
-                                <Button variant="contained" size="large" style={{backgroundColor: "#f9c513"}}>References</Button>
+                                <Button variant="contained" size="large" style={{backgroundColor: "#f9c513"}} href="https://github.com/NaveenKumarReddyK/password-manager/tree/master/src/Components/References" target="_blank">References</Button>
                             </li>
                             <li className={classes.nav_ul_li}>
                                 <Button variant="contained" size="large" endIcon={<ExitToAppIcon />} style={{backgroundColor: "#f97583"}} onClick={this.userLogout}>Logout</Button>
