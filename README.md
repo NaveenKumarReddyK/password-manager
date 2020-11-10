@@ -19,3 +19,17 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### ` Password manager to store your passwords for different websites `
 ### ` Passwords are encrypted using 3DES algorithm ` 
+
+> ### Screenshots
+
+> ### Login
+![Login page](https://github.com/NaveenKumarReddyK/password-manager/blob/master/Screenshots/Login%20Page.jpg)
+
+> ### Register
+![Register page](https://github.com/NaveenKumarReddyK/password-manager/blob/master/Screenshots/Register%20Page.jpg)
+
+> ### Adding new Password
+![Adding new Password](https://github.com/NaveenKumarReddyK/password-manager/blob/master/Screenshots/Adding%20New%20Password.jpg)
+
+> ### Updating Password
+![Updating Password](https://github.com/NaveenKumarReddyK/password-manager/blob/master/Screenshots/updating%20password.jpg)
