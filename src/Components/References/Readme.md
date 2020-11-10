@@ -1,4 +1,4 @@
-## References used fro bilding this site
+## References used for building this site
 
 ### MERN stack 
 
