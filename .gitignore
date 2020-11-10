@@ -25,5 +25,5 @@ yarn-error.log*
 /Backend/Crypto_Tester.js
 /src/Components/CSS-Maker.css
 /src/Components/Main-Page.js
-/src/Password-Dialogs
-/src/Logged-Status
+/src/Components/Password-Dialogs
+/src/Components/Logged-Status
