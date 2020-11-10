@@ -1,8 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Route} from 'react-router-dom';
-// import MainPage from './Components/Main-Page';
-import Login_Component from './Components/Login';
-import Register_Component from './Components/Register';
+import LoginComponent from './Components/Login';
+import RegisterComponent from './Components/Register';
 import Dashboard from "./Components/Dashboard";
 import axios from 'axios';
 
@@ -50,17 +49,16 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <Route
-          exact path="/pwd/login"
+          path="/pwd/login"
           render={props => (
-            <Login_Component
+            <LoginComponent
               handleLogin={this.handleLogin}
               loggedInStatus={this.state.loginStatus} />
           )} />
-        {/* <Route path="/pwd/login" component={Login_Component} /> */}
         <Route
           path="/pwd/signup"
           render={props => (
-            <Register_Component
+            <RegisterComponent
               handleLogin={this.handleLogin}
               loggedInStatus={this.state.loginStatus} />
           )}

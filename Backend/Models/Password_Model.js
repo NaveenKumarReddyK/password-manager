@@ -18,8 +18,6 @@ const pwdSchema = new Schema({
     //this password is the password to save 
     password_tosave: {
         type: String,
-        default: "",
-        required: true,
     },
     //this master password is used for encryption and decryption of saved
     master_password: {

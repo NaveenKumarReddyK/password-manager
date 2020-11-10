@@ -3,8 +3,8 @@ import {Grid, Container, Typography, Divider, TextField, Button, Link, Snackbar}
 import {withStyles} from '@material-ui/core/styles';
 import propTypes from 'prop-types';
 import axios from 'axios';
-import {useHistory, Redirect} from 'react-router-dom';
-import {isUserLoggedIn} from './Logged-Status/Is_User_LoggedIn';
+import {Redirect} from 'react-router-dom';
+// import {isUserLoggedIn} from './Logged-Status/Is_User_LoggedIn';
 
 const Login_Style = {
     root: {
@@ -43,7 +43,7 @@ const Login_Style = {
 };
 
 
-class Login_Component extends React.Component {
+class LoginComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -172,7 +172,7 @@ class Login_Component extends React.Component {
     }
 }
 
-Login_Component.propTypes = {
+LoginComponent.propTypes = {
     classes: propTypes.object.isRequired
 };
-export default withStyles(Login_Style)(Login_Component);
+export default withStyles(Login_Style)(LoginComponent);

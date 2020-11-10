@@ -10,7 +10,6 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import axios from 'axios';
-import Login from './Login';
 import {Redirect} from 'react-router-dom';
 
 const Pwd_Decrypt = require('./Pwd_Decrypt');
@@ -22,7 +21,6 @@ const DB_Styles = {
         flexDirection: "row",
         width: "100vw",
         height: "9vh",
-        // backgroundColor :"#959da5"
     },
     navPaper: {
         position: "relative",
@@ -76,8 +74,6 @@ const DB_Styles = {
         color: "black",
         margin: "0",
         marginTop: "1vh"
-        // paddingTop: "2vh",
-        // lineHeight: "4vh",
     },
     email_input: {
         marginTop: "2vh"
@@ -92,12 +88,14 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            addPwd_Sanck: false,
-            updatePwd_Sanck: false,
+            addPwd_Dialog: false,
+            updatePwd_Dialog: false,
             loginStatus: false,
             addPwd: "",
             addEmail: "",
             updPwd: "",
+            updEmail: "",
+            updMasterPwd: "",
             userData: [],
         };
         this.addPwdSanckOpen = this.addPwdSanckOpen.bind(this);
@@ -112,10 +110,19 @@ class Dashboard extends React.Component {
         this.handleUpdPwd = this.handleUpdPwd.bind(this);
         this.decryptPassword = this.decryptPassword.bind(this);
     }
-    addPwdSanckOpen() {this.setState({addPwd_Sanck: true});}
-    addPwdSanckClose() {this.setState({addPwd_Sanck: false});}
-    updatePwdDialogOpen() {this.setState({updatePwd_Sanck: true});}
-    updatePwdDialogClose() {this.setState({updatePwd_Sanck: false});}
+    addPwdSanckOpen() {this.setState({addPwd_Dialog: true});}
+    addPwdSanckClose() {this.setState({addPwd_Dialog: false});}
+    updatePwdDialogOpen(currPwd, currEmail, currMasterPwd) {
+        var decPwd = this.decryptPassword(currPwd, currMasterPwd);
+        this.setState({
+            updatePwd_Dialog: true,
+            updEmail: currEmail,
+            updPwd: decPwd,
+            updMasterPwd: currMasterPwd,
+        });
+
+    }
+    updatePwdDialogClose() {this.setState({updatePwd_Dialog: false});}
 
     //invoke getUserData function to get all passwords of user
     componentDidMount() {
@@ -176,11 +183,11 @@ class Dashboard extends React.Component {
         });
     }
     //update password
-    updatePassword(updatedPassword, companyEmail, masterPwdHash) {
+    updatePassword() {
         var data = JSON.stringify({
-            comp_email: companyEmail,
-            new_pwd: updatedPassword,
-            masterPwd_SHA256: masterPwdHash
+            comp_email: this.state.updEmail,
+            new_pwd: this.state.updPwd,
+            masterPwd_SHA256: this.state.updMasterPwd
         });
         var updPwdsConfig = {
             method: 'post',
@@ -244,7 +251,6 @@ class Dashboard extends React.Component {
 
     render() {
         const {classes} = this.props;
-        let dataArray = this.state.userData;
         if (this.props.loggedInStatus === false) {
             return <Redirect to="/pwd/login" />;
         }
@@ -279,8 +285,6 @@ class Dashboard extends React.Component {
                         return (
 
                             <div key={i}>
-                                {/* {console.log(paswordDecrypt(data.password_tosave, data.master_password).toString())} */}
-                                {/* paswordDecrypt(data.password_tosave, data.master_password) */}
                                 <Paper elevation={1} className={classes.dataPaper}>
                                     <ul style={{
                                         position: "relative",
@@ -296,63 +300,62 @@ class Dashboard extends React.Component {
                                         <Divider orientation="vertical" flexItem />
                                         <li className={classes.data_ul_li_12}>
                                             <p className={classes.data_p}>{this.decryptPassword(data.password_tosave, data.master_password)}</p>
-                                            {/* <p className={classes.data_p}>{data.password_tosave}</p> */}
                                         </li>
                                         <li className={classes.data_ul_li_34}>
-                                            <Button variant="contained" disableElevation size="large" endIcon={<CloudUploadIcon />} style={{backgroundColor: "#f66a0a"}} onClick={this.updatePwdDialogOpen}>Update</Button>
+                                            <Button variant="contained" disableElevation size="large" endIcon={<CloudUploadIcon />} style={{backgroundColor: "#f66a0a"}}
+                                                onClick={() => {this.updatePwdDialogOpen(data.password_tosave, data.company_email, data.master_password);}}
+                                            >Update</Button>
                                         </li>
                                         <li className={classes.data_ul_li_34}>
                                             <Button variant="contained" disableElevation size="large" endIcon={<DeleteForeverIcon />} style={{backgroundColor: "#cb2431"}} onClick={() => {this.deletePassword(data.company_email);}}>Delete</Button>
                                         </li>
                                     </ul>
                                 </Paper>
-                                <Dialog open={this.state.updatePwd_Sanck} >
-                                    <DialogTitle >Update Password</DialogTitle>
-                                    <Divider />
-                                    <DialogContent>
-                                        <TextField
-                                            disabled
-                                            label="Company Email Address"
-                                            type="email"
-                                            name="email"
-                                            fullWidth
-                                            className={classes.email_input}
-                                            value={data.company_email}
-                                        />
-                                        <TextField
-                                            label="Updated Password"
-                                            type="text"
-                                            name="password"
-                                            fullWidth
-                                            className={classes.pwd_input}
-                                            onChange={this.handleUpdPwd}
-                                            value={this.state.updPwd}
-                                            defaultValue={this.decryptPassword(data.password_tosave, data.master_password)}
-                                        />
-                                    </DialogContent>
-                                    <Divider />
-                                    <DialogActions>
-                                        <Button style={{color: "green"}} size="large"
-                                            onClick={this.updatePassword(this.state.updPwd, data.company_email, data.master_password)}
-                                        >Update</Button>
-                                        <Button style={{color: "red"}} size="large" onClick={this.updatePwdDialogClose}>Cancel</Button>
-                                    </DialogActions>
-                                </Dialog>
+
                             </div>
 
                         );
 
                     })}
 
-
-
-                    {/* ************************************************************************************ */}
                 </div>
+                {/* ************************UPDATING PASSWORD************************ */}
+                <Dialog open={this.state.updatePwd_Dialog} >
+                    <DialogTitle >Update Password</DialogTitle>
+                    <Divider />
+                    <DialogContent>
+                        <TextField
+                            disabled
+                            label="Company Email Address"
+                            type="text"
+                            fullWidth
+                            className={classes.email_input}
+                            value={this.state.updEmail}
+                        />
+                        <TextField
+                            label="Updated Password"
+                            type="text"
+                            name="updPwd"
+                            fullWidth
+                            className={classes.pwd_input}
+                            onChange={this.handleUpdPwd}
+                            value={this.state.updPwd}
+                        />
+                    </DialogContent>
+                    <Divider />
+                    <DialogActions>
+                        <Button
+                            style={{color: "green"}}
+                            size="large"
+                            onClick={this.updatePassword}
+                        >Update</Button>
+                        <Button style={{color: "red"}} size="large" onClick={this.updatePwdDialogClose}>Cancel</Button>
+                    </DialogActions>
+                </Dialog>
 
-                {/******************************************************************************
-                  *********************ADDING ADD PASSWORD DIALOG*******************************
+                {/*********************ADDING ADD PASSWORD DIALOG*******************************
                   ******************************************************************************/}
-                <Dialog open={this.state.addPwd_Sanck}  >
+                <Dialog open={this.state.addPwd_Dialog}  >
                     <DialogTitle >Add Password</DialogTitle>
                     <Divider />
                     <DialogContent>

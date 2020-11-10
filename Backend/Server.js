@@ -22,7 +22,7 @@ const mongoDB_url = "mongodb://localhost:27017/pwdManager";
 
 //connecting to database
 mongodb.Promise = global.Promise;
-mongodb.connect(mongoDB_url, {useNewUrlParser: true, useUnifiedTopology: true})
+mongodb.connect(mongoDB_url, {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify : false})
   .then(res => {
     console.log("Successfuly connected to databse");
   })

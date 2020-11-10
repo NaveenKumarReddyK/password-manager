@@ -2,7 +2,7 @@ import React from 'react';
 import {Grid, Container, Typography, Divider, TextField, Button, Link} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import propTypes from 'prop-types';
-import {BrowserRouter, Redirect} from 'react-router-dom';
+import { Redirect} from 'react-router-dom';
 import axios from 'axios';
 
 const Reg_Style = {
@@ -42,7 +42,7 @@ const Reg_Style = {
 };
 
 
-class Register_Component extends React.Component {
+class RegisterComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -167,7 +167,7 @@ class Register_Component extends React.Component {
     }
 }
 
-Register_Component.propTypes = {
+RegisterComponent.propTypes = {
     classes: propTypes.object.isRequired
 };
-export default withStyles(Reg_Style)(Register_Component);
+export default withStyles(Reg_Style)(RegisterComponent);
