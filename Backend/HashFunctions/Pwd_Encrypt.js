@@ -26,7 +26,7 @@ module.exports = function encryptStoredPassword(curr_pwd, master_pwd) {
   // console.log("encStr", encrypted.ciphertext.toString());
 
   return {
-    enc_pwd: encStr,
+    enc_pwd: encStr.toString(),
     enc_pwd_String: encrypted.ciphertext.toString(),
   };
 };

@@ -39,7 +39,7 @@ pwdRoutes.route("/addpwd").post(function (req, res) {
                 const newPwdData = new Pwd({
                     master_email: req.session.session_email,
                     company_email: curr_email,
-                    password_tosave: hashed_pwd.enc_pwd_String,
+                    password_tosave: hashed_pwd.enc_pwd,
                     master_password: masterPwd_SHA256
                 });
                 //add it into DB
@@ -134,7 +134,7 @@ pwdRoutes.route('/update').post(function (req, res) {
     var new_pwd = req.body.new_pwd;
     var masterPwd_SHA256 = req.body.masterPwd_SHA256;
     var new_enc_pwd = pwdEnc(new_pwd, masterPwd_SHA256);
-    Pwd.findOneAndUpdate({ master_email: master_email, company_email: comp_email }, { $set: { password_tosave: new_enc_pwd.enc_pwd_String } }).then((updRes) => {
+    Pwd.findOneAndUpdate({ master_email: master_email, company_email: comp_email }, { $set: { password_tosave: new_enc_pwd.enc_pwd } }).then((updRes) => {
         if (!updRes) {
             res.status(400).json({
                 Upd_Err: "Unable to update password"
