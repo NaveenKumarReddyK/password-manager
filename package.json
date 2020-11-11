@@ -31,6 +31,7 @@
     "server": "cd Backend && node Server ",
     "dev":"concurrently \"npm run client\" \"npm run server\"",
     "build": "react-scripts build",
+    "start":"npm run dev",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
