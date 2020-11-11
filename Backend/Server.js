@@ -19,7 +19,7 @@ const COOKIE_AGE = 2 * 60 * 60 * 1000;//(2 hours)
 const bodyParser = require('body-parser');
 //database url to connect to mongodb
 // const mongoDB_url = "mongodb://localhost:27017/pwdManager";
-const mongoDB_url = "mongodb+srv://admin:adminzxcvb@pwdcluster.4wyjy.mongodb.net/test"
+const mongoDB_url = "mongodb+srv://<username:password>@pwdcluster.4wyjy.mongodb.net/test"
 
 //connecting to database
 mongodb.Promise = global.Promise;
