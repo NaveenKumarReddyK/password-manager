@@ -27,13 +27,15 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "client" :"react-scripts start",
+    "client": "react-scripts start",
     "server": "cd Backend && node Server ",
-    "dev":"concurrently \"npm run client\" \"npm run server\"",
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
     "build": "react-scripts build",
-    "start":"npm run dev",
+    "start": "npm run server",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install-client": "npm install",
+    "heroku-postbuild": "npm run install-client && npm run build"
   },
   "eslintConfig": {
     "extends": [

@@ -12,7 +12,7 @@ const mongodb = require('mongoose');
 //mongodb session store
 const MongodbStore = require('connect-mongodb-session')(cookie);
 //define port 
-const port = 4000;
+const PORT = process.env.PORT || 4000;
 //define cookie age(time to expire)
 const COOKIE_AGE = 2 * 60 * 60 * 1000;//(2 hours)
 //body parser to get payload sent 
@@ -23,7 +23,7 @@ const mongoDB_url = "mongodb+srv://admin:adminzxcvb@pwdcluster.4wyjy.mongodb.net
 
 //connecting to database
 mongodb.Promise = global.Promise;
-mongodb.connect(mongoDB_url, {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify : false})
+mongodb.connect( process.env.MONGODB_URI || mongoDB_url, {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify : false})
   .then(res => {
     console.log("Successfuly connected to databse");
   })
@@ -33,7 +33,7 @@ mongodb.connect(mongoDB_url, {useNewUrlParser: true, useUnifiedTopology: true,us
 
 //adding sessions to database
 const MongoDB_Cookie_Store = new MongodbStore({
-  uri: mongoDB_url,
+  uri: process.env.MONGODB_URI || mongoDB_url,
   collection: "SESSION_DB"
 });
 
@@ -61,7 +61,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use("/pw-manager/auth", authRoutes);//login & registration
 app.use("/pw-manager/pwd", pwdRoutes);//passwords actions
 
-app.listen(port, (err) => {
+//for heroku
+if(process.env.NODE_ENV === 'production'){
+  express.static('/build');
+}
+
+app.listen(PORT, (err) => {
   if (err) {
     console.log("Failed to start server");
   }
