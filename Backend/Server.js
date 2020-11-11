@@ -63,7 +63,7 @@ app.use("/pw-manager/pwd", pwdRoutes);//passwords actions
 
 //for heroku
 if(process.env.NODE_ENV === 'production'){
-  express.static('/build');
+  express.static('../build');
 }
 
 app.listen(PORT, (err) => {
