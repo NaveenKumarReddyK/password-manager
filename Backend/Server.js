@@ -23,7 +23,7 @@ const mongoDB_url = "mongodb+srv://admin:adminzxcvb@pwdcluster.4wyjy.mongodb.net
 
 //connecting to database
 mongodb.Promise = global.Promise;
-mongodb.connect( process.env.MONGODB_URI || mongoDB_url, {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify : false})
+mongodb.connect(  mongoDB_url, {useNewUrlParser: true, useUnifiedTopology: true,useFindAndModify : false})
   .then(res => {
     console.log("Successfuly connected to databse");
   })
@@ -33,7 +33,7 @@ mongodb.connect( process.env.MONGODB_URI || mongoDB_url, {useNewUrlParser: true,
 
 //adding sessions to database
 const MongoDB_Cookie_Store = new MongodbStore({
-  uri: process.env.MONGODB_URI || mongoDB_url,
+  uri: mongoDB_url,
   collection: "SESSION_DB"
 });
 
