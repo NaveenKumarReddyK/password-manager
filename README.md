@@ -6,8 +6,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### `npm run dev` to run application in development mode
 
-### Navigate to backend folder and ` node server ` to run server
-
 ### Open [http://localhost:3000/pwd/login](http://localhost:3000/pwd/login) to view it in the browser.
 
 > ### Navigate to login page [http://localhost:3000/pwd/login](http://localhost:3000/pwd/login)
