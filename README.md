@@ -4,7 +4,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-### `npm start` to run application in development mode
+### `npm run dev` to run application in development mode
 
 ### Navigate to backend folder and ` node server ` to run server
 
